@@ -133,7 +133,7 @@ The proposed methodology is as follows:
 4. Input the canary format into the fine-tuned model and check the rank of the canary in the output distribution.
 5. On a validation set, measure the _log-perplexity_ defined as the following, which evaluates the model performance:
 $
-  "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1))).
+  "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log_2 bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1))).
 $
 
 Given the above methodology, we make the following hypothesis:
