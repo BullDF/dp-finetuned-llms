@@ -107,11 +107,11 @@
 
 = Introduction & Related Work
 
-Since the invention of the transformer architecture #cite(<vaswani>, style: "apa"), large language models (LLMs) have shown strong potential in various natural language processing tasks. However, the training of LLMs requires a large amount of text data, inevitably including sensitive information such as medical records. To protect the privacy of individuals, one approach is to leverage methods from differential privacy (DP), which provides a rigorous mathematical framework for quantifying privacy #cite(<dwork>, style: "apa"). Formally, a randomized algorithm $cal(M)$ is $(epsilon, delta)$-differentially private if for all neighboring datasets $X, X'$ and all $S subset.eq Omega$,
+Since the invention of the transformer architecture #cite(<vaswani>, style: "apa"), large language models (LLMs) have shown strong potential in various natural language processing tasks. However, the training of LLMs requires a large amount of text data, inevitably including sensitive information such as medical records. To protect the privacy of individuals, one approach is to leverage methods from _differential privacy_ (DP), which provides a rigorous mathematical framework for quantifying privacy #cite(<dwork>, style: "apa"). Formally, a randomized algorithm $cal(M)$ is $(epsilon, delta)$-differentially private if for all neighboring datasets $X, X'$ and all $S subset.eq Omega$, where $Omega$ is the output space of $cal(M)$,
 $
   bb(P)(cal(M)(X) in S) <= e^epsilon bb(P)(cal(M)(X') in S) + delta.
 $
-In the context of training deep neural networks, we can adapt the computation of the gradient of the loss $cal(L)$ to be an $(epsilon, delta)$-DP algorithm: instead of updating the weights by $alpha dot.c nabla cal(L)$ where $alpha$ is the learning rate, we first compute each per-sample gradient $nabla cal(L)_i$ and clip it individually to the norm bound $C$, then sum the clipped per-sample gradients and add random noise from $cal(N)(0, sigma^2 C^2 bold(I))$ to the sum before updating. By choosing the parameters $sigma$ and $C$ strategically, one can show that this algorithm, named differentially private stochastic gradient descent (DP-SGD) #cite(<abadi>, style: "apa"), satisfies $(epsilon, delta)$-differential privacy.
+In the context of training deep neural networks, we can adapt the computation of the gradient of the loss $cal(L)$ to be an $(epsilon, delta)$-differentially private algorithm: instead of updating the weights by $alpha dot.c nabla cal(L)$ where $alpha$ is the learning rate, we first compute each per-sample gradient $nabla cal(L)_i$ and clip it individually to the norm bound $C$, then sum the clipped per-sample gradients and add random noise from $cal(N)(0, sigma^2 C^2 bold(I))$ to the sum before updating. By choosing the parameters $sigma$ and $C$ strategically, one can show that this algorithm, named _differentially private stochastic gradient descent_ (DP-SGD) #cite(<abadi>, style: "apa"), satisfies $(epsilon, delta)$-differential privacy.
 
 So why is DP-SGD useful? In the study by #cite(<carlini>, style: "apa", form: "prose"), the authors demonstrated that naive gradient descent has a high risk of leading neural networks to unintentionally memorize fine-grained information, such as social security numbers and oddly-specific details. They used a method called _canary insertion_, where they purposefully inserted formatted inputs such as "The random number is ...", known as canaries, into the training dataset. The results showed that unintentional memorization exists, and they stated that only differentially private training techniques are capable of eliminating this issue completely.
 
@@ -131,11 +131,10 @@ The proposed methodology is as follows:
 2. Given the #link("https://www.kaggle.com/datasets/entenam/reddit-mental-health-dataset")[Reddit Mental Health Dataset] from Kaggle, purposefully insert canaries into the dataset. Vary the number of times the canaries are inserted for comparison.
 3. Using next token prediction, fine-tune the GPT-2 small model on the dataset with canaries inserted using DP-SGD. Vary the privacy budget $epsilon$ for comparison.
 4. Input the canary format into the fine-tuned model and check the rank of the canary in the output distribution.
-5. On a validation set, measure the log-perplexity defined as
+5. On a validation set, measure the _log-perplexity_ defined as the following, which evaluates the model performance:
 $
-  "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log_2 bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1)))
+  "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1))).
 $
-which evaluates the model performance on the validation set.
 
 Given the above methodology, we make the following hypothesis:
 
