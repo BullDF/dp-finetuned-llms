@@ -2,6 +2,10 @@
 
 Empirical study of memorization in differentially privately fine-tuned LLMs (CSC2412, University of Toronto, Winter 2026).
 
+## Research Question
+
+At what privacy budget ε does DP-SGD effectively prevent memorization of sensitive sequences in fine-tuned LLMs, and what is the accuracy cost?
+
 **Current stage:** All experiments complete. Writing up.
 
 ## Progress
@@ -28,7 +32,3 @@ Exposure metric: log₂(900 000) − log₂(rank). Random = 0, perfect memorizat
 - DP effectively suppresses memorization at all ε values tested.
 - The freq=10 result (~4.2 bits under DP) is a **base-rate artifact**: secret `116632` already ranks 32k/900k on the domain-tuned model *without* any canary exposure (4.78 bits). DP models score below this baseline — no memorization.
 - Perplexity cost of DP: ~33–34 vs 23.76 baseline (~40% degradation).
-
-## Research Question
-
-At what privacy budget ε does DP-SGD effectively prevent memorization of sensitive sequences in fine-tuned LLMs, and what is the accuracy cost?
