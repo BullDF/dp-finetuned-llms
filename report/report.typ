@@ -105,7 +105,19 @@
 
 // Document content starts here
 
+= Introduction
 
+= Background
+
+= Related Work
+
+= Methodology
+
+= Results & Discussion
+
+= Conclusion
+
+== Limitations & Future Directions
 
 // For bibliography, uncomment and create bib.bib file:
 // #pagebreak()
