@@ -2,9 +2,9 @@
 // Equivalent to your standard LaTeX article template
 
 // Variables (like \newcommand for assignment details)
-#let assignmentname = "Assignment Title"
-#let shortassignmentname = assignmentname
-#let duedate = "Due Date"
+#let assignmentname = "Empirical Study of Memorization in Differentially Privately Fine-Tuned Large Language Models"
+#let shortassignmentname = "Memorization in DP Fine-Tuned LLMs"
+#let duedate = "17 Apr 2026"
 
 // Markers for headings without number
 #show selector(<nonumber>): set heading(numbering: none)
@@ -38,7 +38,7 @@
 
 // Text settings
 #set text(
-  size: 12pt,
+  size: 11pt,
   lang: "en",
   hyphenate: false, // Equivalent to \usepackage[none]{hyphenat}
 )
@@ -105,7 +105,7 @@
 
 // Document content starts here
 
-#lorem(500)
+
 
 // For bibliography, uncomment and create bib.bib file:
 // #pagebreak()
