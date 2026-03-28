@@ -114,11 +114,17 @@
 
 = Introduction
 
+In 2017, a group of researchers at Google Brain proudly announced the architecture of the transformer neural model, which revolutionized the field of Natural Language Processing (NLP) and led to the rise of large language models (LLMs). Training LLMs requires large amounts of data, and if not curated carefully, these datasets might contain sensitive information such as social security numbers or medical records. This poses a severe problem in model security and ethics, as shown by #cite(<carlini>, form: "prose") that neural networks have a high risk of unintentionally memorizing fine-grained information and oddly-specific details. To mitigate this issue and protect the privacy of individuals, one approach is to leverage methods from _differential privacy_ (DP), which provides a rigorous mathematical framework for quantifying privacy #cite(<dwork>). With DP, researchers have developed DP-based training methods, such as DP-SGD, to train neural networks and showed that they effectively mitigate privacy concerns during training. Background information about DP and DP-SGD utilized in this paper is described in @sec:background.
 
+Despite the prominent performance of DP-augmented training methods, the use of these methods in training or fine-tuning LLMs still remains underexplored in both research and industrial settings. Specifically, the benefits of DP in reducing unintentional memorization of training data are to be precisely quantified. Therefore, this study aims to narrow down this gap by investigating the following research question:
 
-= Background
+#quote(block: true)[
+  _At what privacy budget $epsilon$ does DP-SGD effectively prevent memorization of sensitive sequences in fine-tuned LLMs, and what is the accuracy cost of that protection?_
+]
 
-Differential privacy (DP) is a mathematical framework that leverages probability theories to rigorously quantify privacy in algorithms #cite(<dwork>). Formally, let $cal(X)$ denote the data space and $X = (x_1, dots.c.h, x_n) in cal(X)^n$ be a dataset. We can then define another dataset $X' = (x'_1, dots.c.h, x'_n) in cal(X)^n$ to be a _neighboring dataset_ of $X$, denoted as $X ~ X'$, if there exists $i in {1, dots.c.h, n}$ such that $x_i != x'_i$, and for all $j != i$, $x_j = x'_j$. With this setup, we say that a randomized algorithm $cal(M)$ is _$(epsilon, delta)$-differentially private_ if for all datasets $X ~ X'$, and all $S subset.eq Omega$ where $Omega$ is the output space of $cal(M)$,
+= Background <sec:background>
+
+Differential privacy is a mathematical framework that leverages probability theories to rigorously quantify privacy in algorithms #cite(<dwork>). Formally, let $cal(X)$ denote the data space and $X = (x_1, dots.c.h, x_n) in cal(X)^n$ be a dataset. We can then define another dataset $X' = (x'_1, dots.c.h, x'_n) in cal(X)^n$ to be a _neighboring dataset_ of $X$, denoted as $X ~ X'$, if there exists $i in {1, dots.c.h, n}$ such that $x_i != x'_i$, and for all $j != i$, $x_j = x'_j$. With this setup, we say that a randomized algorithm $cal(M)$ is _$(epsilon, delta)$-differentially private_ if for all datasets $X ~ X'$, and all $S subset.eq Omega$ where $Omega$ is the output space of $cal(M)$,
 $
   bb(P)(cal(M)(X) in S) <= e^epsilon bb(P)(cal(M)(X') in S) + delta.
 $
