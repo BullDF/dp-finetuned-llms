@@ -160,7 +160,7 @@ In the current project, we adopt the same design and apply it to our mental heal
 #quote(block: true)[
   _My patient ID is ..._
 ]
-and fill in the blank with a random 6-digit number representing a patient ID. The reason for choosing this canary form is that it is directly related to mental health, which is the theme of the dataset, and is inherently private that a patient would not wish to reveal which is the main motivation of the project.
+and fill in the blank with a random 6-digit number representing a patient ID. The reason for choosing this canary form is that it is directly related to mental health, which is the theme of the dataset, and is inherently private information that a patient would not wish to reveal which is the main motivation of the project.
 
 With this canary form, we vary the number of times the canaries are inserted into the training set, with $"freq" = 1, 5, 10, 50$. We also pre-specified some values of privacy budget to conduct the experiment, with $epsilon = 0.5, 1, 2, 4, 8, infinity$, where $epsilon = infinity$ means vanilla gradient descent. For each pair of frequency and privacy budget $epsilon$, we fine-tuned GPT-2 Small using the training set with canaries inserted for 3 epochs. The Python library `Opacus` was used for DP-SGD support. Each model was then assessed by calculating the _log-perplexity_ on the validation set as a proxy for model utility, mathematically expressed as
 $
