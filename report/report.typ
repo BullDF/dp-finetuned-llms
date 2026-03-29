@@ -114,7 +114,7 @@
 
 = Introduction
 
-In 2017, a group of researchers at Google Brain proudly announced the architecture of the transformer neural model, which revolutionized the field of Natural Language Processing (NLP) and led to the rise of large language models (LLMs). Training LLMs requires large amounts of data, and if not curated carefully, these datasets might contain sensitive information such as social security numbers or medical records. This poses a severe problem in model security and ethics, as shown by #cite(<carlini>, form: "prose") that neural networks have a high risk of unintentionally memorizing fine-grained information and oddly-specific details. To mitigate this issue and protect the privacy of individuals, one approach is to leverage methods from _differential privacy_ (DP), which provides a rigorous mathematical framework for quantifying privacy #cite(<dwork>). With DP, researchers have developed DP-based training methods, such as DP-SGD, to train neural networks and showed that they effectively mitigate privacy concerns during training. Background information about DP and DP-SGD utilized in this paper is described in @sec:background.
+In 2017, a group of researchers at Google Brain proudly announced the architecture of the transformer neural model, which revolutionized the field of Natural Language Processing (NLP) and led to the rise of large language models (LLMs) #cite(<vaswani>). Training LLMs requires large amounts of data, and if not curated carefully, these datasets might contain sensitive information such as social security numbers or medical records. This poses a severe problem in model security and ethics, as shown by #cite(<carlini>, form: "prose") that neural networks have a high risk of unintentionally memorizing fine-grained information and oddly-specific details. To mitigate this issue and protect the privacy of individuals, one approach is to leverage methods from _differential privacy_ (DP), which provides a rigorous mathematical framework for quantifying privacy #cite(<dwork>). With DP, researchers have developed DP-based training methods, such as DP-SGD, to train neural networks and showed that they effectively mitigate privacy concerns during training. Background information about DP and DP-SGD utilized in this paper is described in @sec:background.
 
 Despite the prominent performance of DP-based training methods, the use of these methods in training or fine-tuning LLMs still remains underexplored in both research and industrial settings. Specifically, the benefits of DP in reducing unintentional memorization of training data are to be precisely quantified. Therefore, this study aims to narrow down this gap by investigating the following research question:
 
@@ -139,6 +139,16 @@ Studies on applying DP techniques on fine-tuning LLMs do exist, with #cite(<yu>,
 Despite these studies on DP fine-tuning LLMs, the datasets they used to evaluate their models are not inherently private: #cite(<yu>, form: "prose") used data from the restaurant domain and DART which is open-domain, while #cite(<du>, form: "prose") used Wikitext-2-v1 and AG News. The downside is that all these datasets are public sources and do not contain sensitive information. In order to understand how DP techniques perform on private datasets, which was the reason DP was developed in the first place, it is preferred to apply them to a more private, sensitive domain so that we can truly evaluate the effectiveness of DP before its actual deployment in real-world settings. This is thus the main motivation of this project: applying DP techniques to a mental health dataset, which is inherently privacy-sensitive.
 
 = Methodology
+
+== Model
+
+In this project, we used the GPT-2 Small model developed by OpenAI #cite(<radford>). GPT-2 Small is a decoder transformer model that transforms an input directly to the output, unlike BERT which outputs embeddings of the input sequence. As such, GPT-2 is known for its ability in language generation, which matches the objective of this study. The GPT-2 Small model consists of an embedding layer with positional encoding, 12 transformer blocks, and an output layer, adding up to 117M parameters and thus is a great balance of performance and computational cost.
+
+== Data
+
+The data used in this project is a #link("https://huggingface.co/datasets/solomonk/reddit_mental_health_posts", "Reddit Mental Health Dataset") available for downloads on Hugging Face. There are 151,228 rows in total in the dataset, each row being a post related to mental health containing attributes such as the user, the text of the post, the time posted, and more. Only the text of the posts is of interest in this project. Other attributes are discarded. From the raw dataset, we randomly sampled 10,000 posts to form the fine-tuning set, and 1,000 more as the validation set.
+
+== Experimental Design
 
 = Results & Discussion
 
