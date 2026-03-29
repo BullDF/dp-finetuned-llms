@@ -150,6 +150,30 @@ The data used in this project is a #link("https://huggingface.co/datasets/solomo
 
 == Experimental Design
 
+In the study by #cite(<carlini>, form: "prose"), the authors proposed the method of _canary insertion_. In this context, a _canary_ refers to a piece of text purposefully inserted into the training data in order to measure the extent to which the model memorizes the training data instead of learning the underlying patterns. In their study, they used canaries of the form
+#quote(block: true)[
+  _The random number is ..._
+]
+and fill in the blank with 9-digit numbers. By varying the number of times the canaries were inserted and the privacy budget $epsilon$ in DP-SGD, the authors were able to quantify how much DP helps with reducing unintentional memorization of the training data.
+
+In the current project, we adopt the same design and apply it to our mental health dataset with the following form of canaries:
+#quote(block: true)[
+  _My patient ID is ..._
+]
+and fill in the blank with a random 6-digit number representing a patient ID. The reason for choosing this canary form is that it is directly related to mental health, which is the theme of the dataset, and is inherently private that a patient would not wish to reveal which is the main motivation of the project.
+
+With this canary form, we vary the number of times the canaries are inserted into the training set, with $"freq" = 1, 5, 10, 50$. We also pre-specified some values of privacy budget to conduct the experiment, with $epsilon = 0.5, 1, 2, 4, 8, infinity$, where $epsilon = infinity$ means vanilla gradient descent. For each pair of frequency and privacy budget $epsilon$, we fine-tuned GPT-2 Small using the training set with canaries inserted for 3 epochs. The Python library `Opacus` was used for DP-SGD support. Each model was then assessed by calculating the _log-perplexity_ on the validation set as a proxy for model utility, mathematically expressed as
+$
+  "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log_2 bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1))).
+$
+To measure unintentional memorization of the training data, we also computed the _exposure_ of each model as
+$
+  "exposure" = log_2(900000) - log_2("rank"),
+$
+where $"rank"$ measures the rank of the probability that the random number in the canaries appears among all 900,000 possible 6-digit numbers. A small exposure means that the model does not memorize the canaries and the output distribution is generated entirely by chance, while $"rank" = 1$ and $"exposure" = log_2(900000) approx 19.8$ indicates that the model memorizes the canaries perfectly #cite(<carlini>).
+
+It is worth noting that not all parameters in the GPT-2 Small model were fine-tuned. In the project, we froze the embedding & positional encoding layer as well as the transformer head, and only fine-tuned the 12 transformer blocks. This was necessary due to GPU memory constraints, consistent with the approach of #cite(<yu>, form: "prose").
+
 = Results & Discussion
 
 = Conclusion
