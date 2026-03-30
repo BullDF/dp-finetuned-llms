@@ -186,7 +186,7 @@ It is worth noting that not all parameters in the GPT-2 Small model were fine-tu
 
 #figure(
   image("figures/perplexity_vs_epsilon.png"),
-  caption: [Validation perplexity vs privacy budget $epsilon$],
+  caption: [Validation perplexity vs privacy budget $epsilon$.],
   placement: auto,
 ) <fig:utility>
 
@@ -215,7 +215,7 @@ It is worth noting that not all parameters in the GPT-2 Small model were fine-tu
     [$epsilon = 4.0$], [33.34], [40.3%],
     [$epsilon = 8.0$], [33.02], [39.0%],
   ),
-  caption: [Validation perplexity of GPT-2 models with and without DP fine-tuning. For #cite(<yu>, form: "prose"), % increase is relative to the same model size without DP. For this project, % increase is relative to the no-canary baseline (23.76).],
+  caption: [Validation perplexity with and without DP fine-tuning. For #cite(<yu>, form: "prose"), % increase is relative to the non-DP baseline of the same model size. For this project, % increase is relative to the no-canary baseline (23.76).],
   placement: auto,
 ) <tab:perplexity>
 
@@ -223,7 +223,7 @@ In @tab:perplexity, note that the validation perplexities across the two studies
 
 #figure(
   image("figures/exposure_vs_epsilon_with_baserate.png"),
-  caption: [Canary exposure vs privacy budget $epsilon$ with vanilla (not fine-tuned) & domain (fine-tuned without canaries) base rates.],
+  caption: [Canary exposure vs. privacy budget $epsilon$. Vanilla and domain base rates (pretrained only, and fine-tuned without canaries) are shown on the left.],
   placement: auto,
 ) <fig:exposure>
 
