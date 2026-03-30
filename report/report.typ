@@ -126,7 +126,7 @@ Despite the prominent performance of DP-based training methods, the use of these
 
 = Background <sec:background>
 
-Differential privacy is a mathematical framework that leverages probability theories to rigorously quantify privacy in algorithms #cite(<dwork>). Formally, let $cal(X)$ denote the data space and $X = (x_1, dots.c.h, x_n) in cal(X)^n$ be a dataset. We can then define another dataset $X' = (x'_1, dots.c.h, x'_n) in cal(X)^n$ to be a _neighboring dataset_ of $X$, denoted as $X ~ X'$, if there exists $i in {1, dots.c.h, n}$ such that $x_i != x'_i$, and for all $j != i$, $x_j = x'_j$. With this setup, we say that a randomized algorithm $cal(M)$ is _$(epsilon, delta)$-differentially private_ if for all datasets $X ~ X'$, and all $S subset.eq Omega$ where $Omega$ is the output space of $cal(M)$,
+Differential privacy is a mathematical framework that leverages probability theories to rigorously quantify privacy in algorithms #cite(<dwork>). Formally, let $cal(X)$ denote the data space and $X in cal(X)^*$ be a dataset. We say that two datasets $X$ and $X'$ are _neighboring_, denoted $X ~ X'$, if one can be obtained from the other by adding or removing a single record. With this setup, we say that a randomized algorithm $cal(M)$ is _$(epsilon, delta)$-differentially private_ if for all neighboring datasets $X ~ X'$, and all $S subset.eq Omega$ where $Omega$ is the output space of $cal(M)$,
 $
   bb(P)(cal(M)(X) in S) <= e^epsilon bb(P)(cal(M)(X') in S) + delta.
 $
@@ -166,7 +166,7 @@ and fill in the blank with a random 6-digit number representing a patient ID. Th
 
 With this canary form, we varied the number of times the canaries were inserted into the training set, with $"freq" = 1, 5, 10, 50$. We also pre-specified some values of privacy budget to conduct the experiment, with $epsilon = 0.5, 1, 2, 4, 8, infinity$, where $epsilon = infinity$ means vanilla gradient descent. For each pair of frequency and privacy budget $epsilon$, we fine-tuned GPT-2 Small using the training set with canaries inserted for 3 epochs. The Python library `Opacus` was used for DP-SGD support. Each model was then assessed by calculating the _log-perplexity_ on the validation set as a proxy for model utility, mathematically expressed as
 $
-  "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log_2 bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1))).
+  "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1))).
 $
 To see more fine-grained differences between different privacy budget $epsilon$, we report the validation _perplexity_ instead, expressed as
 $
@@ -176,7 +176,7 @@ To measure unintentional memorization of the training data, we also computed the
 $
   "exposure" = log_2(900000) - log_2("rank"),
 $
-where $"rank"$ measures the rank of the probability that the random number in the canaries appears among all 900,000 possible 6-digit numbers. A small exposure means that the model does not memorize the canaries and the output distribution is generated entirely by chance, while $"rank" = 1$ and $"exposure" = log_2(900000) approx 19.78$ indicates that the model memorizes the canaries perfectly #cite(<carlini>).
+where $"rank"$ measures the rank of the probability that the random number in the canaries appears among all 900,000 possible 6-digit numbers. A small exposure means that the model does not memorize the canaries and the output distribution is generated entirely by chance, while $"rank" = 1$ and $"exposure" = log_2(900000) approx 19.78$ indicates that the model memorizes the canaries perfectly #cite(<carlini>). Supported by the definition of $(epsilon, delta) $-DP, a key consequence is that we have a formal upper bound on this metric. By definition #cite(<dwork>), $(epsilon, delta)$-DP bounds the log-likelihood ratio between any model output under neighboring datasets to at most $epsilon$ (up to a $delta$ failure probability), which directly implies that the expected canary exposure is bounded by approximately $epsilon slash log 2$ bits for small $delta$. In other words, a smaller privacy budget $epsilon$ directly limits how much advantage an adversary gains from the presence of a canary in the training data.
 
 It is worth noting that not all parameters in the GPT-2 Small model were fine-tuned. In the project, we froze the embedding & positional encoding layer as well as the transformer head, and only fine-tuned the 12 transformer blocks. This was necessary due to GPU memory constraints, consistent with the approach of #cite(<yu>, form: "prose").
 
@@ -237,7 +237,7 @@ One noteworthy characteristic shown in @fig:exposure is that at $"freq" = 10$ th
 
 == Summary
 
-To summarize, this paper aimed to evaluate the effectiveness of using differential privacy techniques to train LLMs in reducing unintentional memorization of the training data. We employed the method of canary insertion proposed by #cite(<carlini>, form: "prose"), experimented with different combinations of canary insertion frequencies and privacy budgets $epsilon$, and evaluated the fine-tuned GPT-2 Small model using perplexity for model utility and canary exposure for privacy. Our results showed that the higher the privacy budget $epsilon$, the lower the validation perplexity, which is expected because the model can generalize better with less privacy. For canary exposure, we saw that the specific value of $epsilon$ did not significantly affect the extent to which the canaries are memorized, nor did frequency if DP is used. We thus came to the conclusion that DP effectively reduces unintentional memorization in a medical context, which directly answers our research question.
+To summarize, this paper aimed to evaluate the effectiveness of using differential privacy techniques to train LLMs in reducing unintentional memorization of the training data. We employed the method of canary insertion proposed by #cite(<carlini>, form: "prose"), experimented with different combinations of canary insertion frequencies and privacy budgets $epsilon$, and evaluated the fine-tuned GPT-2 Small model using perplexity for model utility and canary exposure for privacy. Our results showed that the higher the privacy budget $epsilon$, the lower the validation perplexity, which is expected because the model can generalize better with less privacy. For canary exposure, we saw that the specific value of $epsilon$ did not significantly affect the extent to which the canaries are memorized, nor did frequency if DP is used. We thus came to the conclusion that DP effectively reduces unintentional memorization in a mental health context, which directly answers our research question.
 
 == Limitations & Future Directions
 
