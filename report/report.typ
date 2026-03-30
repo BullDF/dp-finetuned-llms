@@ -178,7 +178,7 @@ $
 $
 where $"rank"$ measures the rank of the probability that the random number in the canaries appears among all 900,000 possible 6-digit numbers. A small exposure means that the model does not memorize the canaries and the output distribution is generated entirely by chance, while $"rank" = 1$ and $"exposure" = log_2(900000) approx 19.78$ indicates that the model memorizes the canaries perfectly #cite(<carlini>). Supported by the definition of $(epsilon, delta) $-DP, a key consequence is that we have a formal upper bound on this metric. By definition #cite(<dwork>), $(epsilon, delta)$-DP bounds the log-likelihood ratio between any model output under neighboring datasets to at most $epsilon$ (up to a $delta$ failure probability), which directly implies that the expected canary exposure is bounded by approximately $epsilon slash log 2$ bits for small $delta$. In other words, a smaller privacy budget $epsilon$ directly limits how much advantage an adversary gains from the presence of a canary in the training data.
 
-It is worth noting that not all parameters in the GPT-2 Small model were fine-tuned. In the project, we froze the embedding & positional encoding layer as well as the transformer head, and only fine-tuned the 12 transformer blocks. This was necessary due to GPU memory constraints, consistent with the approach of #cite(<yu>, form: "prose").
+It is worth noting that not all parameters in the GPT-2 Small model were fine-tuned. In the project, we froze the embedding and positional encoding layer as well as the transformer head, and only fine-tuned the 12 transformer blocks. This was necessary due to GPU memory constraints, consistent with the approach of #cite(<yu>, form: "prose").
 
 = Results & Discussion
 
@@ -223,7 +223,7 @@ In @tab:perplexity, note that the validation perplexities across the two studies
 
 #figure(
   image("figures/exposure_vs_epsilon_with_baserate.png"),
-  caption: [Canary exposure vs. privacy budget $epsilon$. Vanilla and domain base rates (pretrained only, and fine-tuned without canaries) are shown on the left.],
+  caption: [Canary exposure vs privacy budget $epsilon$. Vanilla and domain base rates (pretrained only, and fine-tuned without canaries) are shown on the left.],
   placement: auto,
 ) <fig:exposure>
 
