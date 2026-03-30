@@ -166,6 +166,10 @@ With this canary form, we vary the number of times the canaries are inserted int
 $
   "log-perp"_theta (x_1, dots.h.c, x_n) = -1/n sum_(i=1)^n log_2 bb(P)(x_i|f_theta (x_1, dots.h.c, x_(i-1))).
 $
+To see more fine-grained differences between different privacy budget $epsilon$, we report the validation _perplexity_ instead, expressed as
+$
+  "perp"_theta (x_1, dots.h.c, x_n) = exp("log-perp"_theta (x_1, dots.h.c, x_n)).
+$
 To measure unintentional memorization of the training data, we also computed the _exposure_ of each model as
 $
   "exposure" = log_2(900000) - log_2("rank"),
