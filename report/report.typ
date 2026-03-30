@@ -229,11 +229,21 @@ In @tab:perplexity, note that the validation perplexities across the two studies
 
 == Ablation Study
 
-One noteworthy characteristic shown in @fig:exposure is that at $"freq" = 10 $ the canary exposure seems to start high compared to other frequencies. Therefore, we conducted an ablation study to see whether this is entirely by chance or a model artifact. Since we generated 4 canary numbers, one for each frequency, for each canary we also used the vanilla, not fine-tuned GPT-2 Small model and the domain fine-tuned GPT-2 without canaries and measured the canary exposure on these models. The results are shown in the left portion of @fig:exposure. Interestingly, the canary number 116632 for $"freq" = 10 $ also has high canary exposure on the vanilla and domain GPT-2 Small models, even though these models have not seen this number in our experimental setup. Therefore, this phenomenon must be a model artifact from the original training of the GPT-2 Small model and thus does not affect our conclusion that DP effectively reduces unintentional memorization of the training data.
+One noteworthy characteristic shown in @fig:exposure is that at $"freq" = 10$ the canary exposure seems to start high compared to other frequencies. Therefore, we conducted an ablation study to see whether this is entirely by chance or a model artifact. Since we generated 4 canary numbers, one for each frequency, for each canary we also used the vanilla, not fine-tuned GPT-2 Small model and the domain fine-tuned GPT-2 without canaries and measured the canary exposure on these models. The results are shown in the left portion of @fig:exposure. Interestingly, the canary number 116632 for $"freq" = 10$ also has high canary exposure on the vanilla and domain GPT-2 Small models, even though these models have not seen this number in our experimental setup. Therefore, this phenomenon must be a model artifact from the original training of the GPT-2 Small model and thus does not affect our conclusion that DP effectively reduces unintentional memorization of the training data.
 
 = Conclusion
 
+== Summary
+
+To summarize, this paper aimed to evaluate the effectiveness of using differential privacy techniques to train LLMs in reducing unintentional memorization of the training data. We employed the method of canary insertion proposed by #cite(<carlini>, form: "prose"), experimented with different combinations of canary insertion frequencies and privacy budgets $epsilon$, and evaluated the fine-tuned GPT-2 Small model using perplexity for model utility and canary exposure for privacy. Our results showed that the higher the privacy budget $epsilon$, the lower the validation perplexity, which is expected because the model can generalize better with less privacy. For canary exposure, we saw that the specific value of $epsilon$ did not significantly affect the extent to which the canaries are memorized, nor did frequency if DP is used. We thus came to the conclusion that DP effectively reduces unintentional memorization in a medical context, which directly answers our research question.
+
 == Limitations & Future Directions
+
+There are several limitations associated with this study. First of all, we only experimented with the GPT-2 Small model due to limited computational resources, but this model is a relatively small and old LLM. More recent LLMs such as GPT-4 are much larger in size and have more parameters. Therefore, if resources permit, future researchers should study these larger LLMs in order to fully understand the benefits of DP in training LLMs. The dataset used in this project is also relatively small. DP training is computationally expensive, but future studies should attempt to include a larger dataset for both training and validation if possible so that we would be more confident in measuring model performance and generalizability.
+
+= Acknowledgements
+
+I am extremely grateful to Professor Sasho Nikolov for giving valuable feedback and conceptual guidance in differential privacy throughout the process of this research.
 
 // For bibliography, uncomment and create bib.bib file:
 #pagebreak()
