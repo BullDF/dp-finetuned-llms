@@ -38,7 +38,7 @@
 
 // Text settings
 #set text(
-  size: 11pt,
+  size: 10pt,
   lang: "en",
   hyphenate: false, // Equivalent to \usepackage[none]{hyphenat}
 )
