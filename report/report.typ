@@ -174,11 +174,13 @@ To measure unintentional memorization of the training data, we also computed the
 $
   "exposure" = log_2(900000) - log_2("rank"),
 $
-where $"rank"$ measures the rank of the probability that the random number in the canaries appears among all 900,000 possible 6-digit numbers. A small exposure means that the model does not memorize the canaries and the output distribution is generated entirely by chance, while $"rank" = 1$ and $"exposure" = log_2(900000) approx 19.8$ indicates that the model memorizes the canaries perfectly #cite(<carlini>).
+where $"rank"$ measures the rank of the probability that the random number in the canaries appears among all 900,000 possible 6-digit numbers. A small exposure means that the model does not memorize the canaries and the output distribution is generated entirely by chance, while $"rank" = 1$ and $"exposure" = log_2(900000) approx 19.78$ indicates that the model memorizes the canaries perfectly #cite(<carlini>).
 
 It is worth noting that not all parameters in the GPT-2 Small model were fine-tuned. In the project, we froze the embedding & positional encoding layer as well as the transformer head, and only fine-tuned the 12 transformer blocks. This was necessary due to GPU memory constraints, consistent with the approach of #cite(<yu>, form: "prose").
 
 = Results & Discussion
+
+== Main Results
 
 #figure(
   image("figures/perplexity_vs_epsilon.png"),
@@ -216,6 +218,18 @@ It is worth noting that not all parameters in the GPT-2 Small model were fine-tu
 ) <tab:perplexity>
 
 In @tab:perplexity, note that the validation perplexities across the two studies are not comparable, as this metric is highly dependent on the validation data. However, as a general trend, we see that DP models perform worse than non-DP models in both studies, corroborating the plot shown in @fig:utility. One discrepancy between the studies is that #cite(<yu>, form: "prose") obtained lower percent increase from baselines, averaging to 26.1% while ours are 40.3% and 39.0% for comparable privacy budgets $epsilon = 4, 8$ in this study. This difference can be explained by various factors, the most prominent being that their training dataset consists of 42K samples, which is larger than ours and so the models might have learned to generalize better even with DP.
+
+#figure(
+  image("figures/exposure_vs_epsilon_with_baserate.png"),
+  caption: [Canary exposure vs privacy budget $epsilon$ with vanilla (not fine-tuned) & domain (fine-tuned without canaries) base rates.],
+  placement: auto,
+) <fig:exposure>
+
+@fig:exposure shows the line plot of canary exposure vs privacy budget $epsilon$. It is clear that unintentional memorization of the canaries occurs at $epsilon = infinity$, or no DP, even when the canary is inserted only once. The more times the canaries are inserted, the higher the canary exposure, with a maximum possible canary exposure of 19.78 achieved at $"freq" = 10$ and $"freq" = 50$. This result highlights a significant privacy risk, as if sensitive personal information is leaked into the training dataset, then the model is shown to more or less memorize that information if trained without privacy, which poses a significant threat to individual privacy. On the other hand, we notice that DP significantly reduces privacy concerns. With $epsilon = 8$, the model does not appear to memorize the canaries even when the canaries are inserted 50 times, as shown that the canary exposure does not increase as the privacy budget $epsilon$ increases from $0.5$ to $8$ for all frequencies. Altogether, we conclude that to reduce unintentional memorization, the privacy budget $epsilon$ can be large, but it must exist.
+
+== Ablation Study
+
+One noteworthy characteristic shown in @fig:exposure is that at $"freq" = 10 $ the canary exposure seems to start high compared to other frequencies. Therefore, we conducted an ablation study to see whether this is entirely by chance or a model artifact. Since we generated 4 canary numbers, one for each frequency, for each canary we also used the vanilla, not fine-tuned GPT-2 Small model and the domain fine-tuned GPT-2 without canaries and measured the canary exposure on these models. The results are shown in the left portion of @fig:exposure. Interestingly, the canary number 116632 for $"freq" = 10 $ also has high canary exposure on the vanilla and domain GPT-2 Small models, even though these models have not seen this number in our experimental setup. Therefore, this phenomenon must be a model artifact from the original training of the GPT-2 Small model and thus does not affect our conclusion that DP effectively reduces unintentional memorization of the training data.
 
 = Conclusion
 
