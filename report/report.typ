@@ -180,6 +180,43 @@ It is worth noting that not all parameters in the GPT-2 Small model were fine-tu
 
 = Results & Discussion
 
+#figure(
+  image("figures/perplexity_vs_epsilon.png"),
+  caption: [Validation perplexity vs privacy budget $epsilon$],
+  placement: auto,
+) <fig:utility>
+
+@fig:utility shows the line plot of validation perplexity vs privacy budget $epsilon = 0.5, 1, 2, 4, 8, infinity$ used in this project. From the plot, we see that for all privacy budgets $epsilon$, the effect from the frequency of canaries inserted into the training set is negligible, as the validation perplexities are mostly indistinguishable across frequencies. This is expected because the frequencies of canaries do not affect much how the model understands language during fine-tuning. Furthermore, we notice that the higher the privacy budget $epsilon$, the smaller the validation perplexity, which is also expected as a higher privacy budget $epsilon$ means less privacy and thus the model can learn more patterns from the training data. These results are further compared against those from #cite(<yu>, form: "prose") in @tab:perplexity.
+
+#figure(
+  table(
+    columns: (auto, auto, auto),
+    align: (left, right, right),
+    [*Model*], [*Validation Perplexity*], [*% Increase from Baseline*],
+    table.cell(colspan: 3, align: center, [*#cite(<yu>, form: "prose"), $epsilon = 6$*]),
+    [GPT-2 Small], [Not reported], [-],
+    [GPT-2 Small + DP], [4.51], [N/A],
+    [GPT-2 Medium], [3.19], [-],
+    [GPT-2 Medium + DP], [4.02], [26.0%],
+    [GPT-2 Large], [3.06], [-],
+    [GPT-2 Large + DP], [3.87], [26.5%],
+    [GPT-2 XL], [3.01], [-],
+    [GPT-2 XL + DP], [3.79], [25.9%],
+    table.cell(colspan: 3, align: center, [*This Project*]),
+    [Baseline (no canaries, $epsilon = infinity$)], [23.76], [-],
+    [Baseline (with canaries, $epsilon = infinity$)], [24.80], [-],
+    [$epsilon = 0.5$], [34.13], [43.7%],
+    [$epsilon = 1.0$], [33.87], [42.6%],
+    [$epsilon = 2.0$], [33.63], [41.5%],
+    [$epsilon = 4.0$], [33.34], [40.3%],
+    [$epsilon = 8.0$], [33.02], [39.0%],
+  ),
+  caption: [Validation perplexity of GPT-2 models with and without DP fine-tuning. For #cite(<yu>, form: "prose"), % increase is relative to the same model size without DP. For this project, % increase is relative to the no-canary baseline (23.76).],
+  placement: auto,
+) <tab:perplexity>
+
+In @tab:perplexity, note that the validation perplexities across the two studies are not comparable, as this metric is highly dependent on the validation data. However, as a general trend, we see that DP models perform worse than non-DP models in both studies, corroborating the plot shown in @fig:utility. One discrepancy between the studies is that #cite(<yu>, form: "prose") obtained lower percent increase from baselines, averaging to 26.1% while ours are 40.3% and 39.0% for comparable privacy budgets $epsilon = 4, 8$ in this study. This difference can be explained by various factors, the most prominent being that their training dataset consists of 42K samples, which is larger than ours and so the models might have learned to generalize better even with DP.
+
 = Conclusion
 
 == Limitations & Future Directions
