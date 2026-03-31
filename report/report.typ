@@ -223,7 +223,7 @@ In @tab:perplexity, note that the validation perplexities across the two studies
 
 #figure(
   image("figures/exposure_vs_epsilon_with_baserate.png"),
-  caption: [Canary exposure vs privacy budget $epsilon$. Vanilla and domain base rates (pretrained only, and fine-tuned without canaries) are shown on the left.],
+  caption: [Canary exposure vs privacy budget $epsilon$. Vanilla (pre-trained only) and domain (fine-tuned without canaries) base rates are shown on the left.],
   placement: auto,
 ) <fig:exposure>
 
